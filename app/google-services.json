@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "292411107000",
+    "project_id": "scd-app-4ca66",
+    "storage_bucket": "scd-app-4ca66.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292411107000:android:f3031389e2b1a0b265364d",
+        "android_client_info": {
+          "package_name": "com.example.scdapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292411107000-dguff36ntaing0k3ju024ait46csia5u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBY8VCNa7rMBxsYMWq_prCQLwxTeoWJTak"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292411107000-dguff36ntaing0k3ju024ait46csia5u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
