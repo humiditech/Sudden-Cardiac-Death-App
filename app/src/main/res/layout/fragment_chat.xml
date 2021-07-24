@@ -3,14 +3,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.ChatFragment"
-    android:background="@drawable/background_baru">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/background_baru"
+    tools:context=".fragments.ChatFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Ini ChatFragment" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="390dp"
+        android:layout_marginTop="250dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/chat_card"
+            android:padding="20dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chat_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:cardBackgroundColor="#000000ff"
+            app:cardElevation="0dp"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/add_button_chat"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/add_button"
+                    android:layout_margin="5dp"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_message_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:hint="Message"
+                    android:inputType="text"
+                    android:layout_weight="1"
+                    android:background="@drawable/et_bg"
+                    android:padding="5dp"
+                    />
+
+                <Button
+                    android:id="@+id/send_button_chat"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/send_button"
+                    android:layout_margin="5dp"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </RelativeLayout>
