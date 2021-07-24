@@ -94,6 +94,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(getActivity(),LoginActivity.class));
+                getActivity().finish();
             }
         });
         return view;

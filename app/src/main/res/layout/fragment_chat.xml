@@ -56,6 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
+                android:id="@+id/doctor_image_chat"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:src="@drawable/gambar_dokter"/>
@@ -110,7 +111,7 @@
                     android:id="@+id/add_button_chat"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/add_button"
+                    android:background="@drawable/ic_add_button"
                     android:layout_margin="5dp"
                     />
 
@@ -129,7 +130,7 @@
                     android:id="@+id/send_button_chat"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/send_button"
+                    android:background="@drawable/ic_send_button"
                     android:layout_margin="5dp"
                     />
             </LinearLayout>

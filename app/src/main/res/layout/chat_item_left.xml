@@ -30,7 +30,7 @@
         android:layout_height="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginleft="5dp" />
+        android:layout_marginLeft="5dp" />
 
     <ImageView
         android:id="@+id/message_tail"

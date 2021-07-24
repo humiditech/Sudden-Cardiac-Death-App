@@ -30,7 +30,7 @@ public class HomeFragment extends Fragment {
         // Required empty   public constructor
     }
 
-    private TextView patientFullName;
+    private TextView patientNickName;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String userId;
@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         if (container == null) return null;
         RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.fragment_home, container, false);
-        patientFullName = (TextView) view.findViewById(R.id.patient_home_name);
+        patientNickName = (TextView) view.findViewById(R.id.patient_home_name);
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         userId = fAuth.getCurrentUser().getUid();
@@ -51,7 +51,7 @@ public class HomeFragment extends Fragment {
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                patientFullName.setText(value.getString("fName"));
+                patientNickName.setText(value.getString("nName"));
             }
         });
         return view;

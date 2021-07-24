@@ -27,7 +27,7 @@ import org.w3c.dom.Text;
 import java.util.Calendar;
 
 public class HistoryFragment extends Fragment {
-    private TextView datepicker,patientFullName,doctorName;
+    private TextView datepicker,patientNickName,doctorName;
     private DatePickerDialog.OnDateSetListener setListener;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
@@ -41,7 +41,7 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
         RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.fragment_history, container, false);
         datepicker = (TextView) view.findViewById(R.id.datepicker_tv);
-        patientFullName = (TextView) view.findViewById(R.id.patient_history_name);
+        patientNickName = (TextView) view.findViewById(R.id.patient_history_name);
         doctorName = (TextView) view.findViewById(R.id.doctor_history_name);
 
         fAuth = FirebaseAuth.getInstance();
@@ -52,7 +52,7 @@ public class HistoryFragment extends Fragment {
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                patientFullName.setText(value.getString("fName"));
+                patientNickName.setText(value.getString("nName"));
                 doctorName.setText(value.getString("dName"));
             }
         });
