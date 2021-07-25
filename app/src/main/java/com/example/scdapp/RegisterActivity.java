@@ -104,6 +104,7 @@ public class RegisterActivity extends AppCompatActivity {
                             user.put("addr",address);
                             user.put("age",age);
                             user.put("emailAddr",email);
+                            user.put("uid",rUserID);
                             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
