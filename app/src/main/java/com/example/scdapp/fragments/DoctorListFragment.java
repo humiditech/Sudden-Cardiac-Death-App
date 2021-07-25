@@ -19,12 +19,19 @@ import com.example.scdapp.Models.UsersModel;
 import com.example.scdapp.R;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Text;
 
+import java.lang.ref.Reference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +45,11 @@ public class DoctorListFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private List<UsersModel> usersList;
+    private FirebaseUser fUser;
+    private UserAdapter uAdapter;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String userId;
-    private FirestoreRecyclerAdapter<UsersModel, UserViewHolder> adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,63 +68,33 @@ public class DoctorListFragment extends Fragment {
     }
 
     private void displayUsers() {
-        Query query = fStore.collection("users");
-        FirestoreRecyclerOptions<UsersModel> options = new FirestoreRecyclerOptions.Builder<UsersModel>()
-                .setQuery(query, UsersModel.class)
-                .build();
+        usersList = new ArrayList<>();
 
-        adapter = new FirestoreRecyclerAdapter<UsersModel, UserViewHolder>(options) {
+        CollectionReference reference = fStore.collection("users");
+
+        reference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
-            protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull UsersModel model) {
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                usersList.clear();
 
-                if (model.getUid().equals(userId)) {
-                    holder.itemView.setVisibility(View.GONE);
-                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-                }else {
-                    holder.setUserName(model.getnName());
-                    holder.itemView.setVisibility(View.VISIBLE);
-                    holder.itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            UsersModel user = document.toObject(UsersModel.class);
+
+                            if (!user.getUid().equals(userId)) {
+                                usersList.add(user);
+                            }
+
+                            uAdapter = new UserAdapter(getContext(), usersList);
+                            recyclerView.setAdapter(uAdapter);
+                        }
+                    }
                 }
-
             }
-
-            @NonNull
-            @Override
-            public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_of_users, parent, false);
-                return new UserViewHolder(view);
-            }
-        };
-        recyclerView.setAdapter(adapter);
-    }
-
-    private class UserViewHolder extends RecyclerView.ViewHolder {
-        private View view;
-
-        UserViewHolder(View itemView) {
-            super(itemView);
-            view = itemView;
-
-        }
-
-        void setUserName(String userName) {
-            TextView tv = view.findViewById(R.id.username_userfrag);
-            tv.setText(userName);
-        }
+        });
 
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        adapter.startListening();
-    }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (adapter != null) {
-            adapter.stopListening();
-        }
-    }
 }
