@@ -44,7 +44,6 @@ public class ChatFragment extends Fragment {
     }
 
     private TextView patientNickName;
-//    private ImageView doctorImage;
     private RecyclerView recyclerView;
     private List<UsersModel> usersList;
     private UserAdapter uAdapter;
@@ -59,8 +58,6 @@ public class ChatFragment extends Fragment {
         if (container == null) return null;
         RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.fragment_chat,container,false);
         patientNickName = (TextView) view.findViewById(R.id.patient_chat_name);
-//        doctorName = (TextView) view.findViewById(R.id.doctor_chat_name);
-//        doctorImage = (ImageView) view.findViewById(R.id.doctor_image_chat);
         recyclerView = view.findViewById(R.id.recyclerview_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -74,14 +71,12 @@ public class ChatFragment extends Fragment {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 patientNickName.setText(value.getString("nName"));
-//                doctorName.setText(value.getString("dName"));
             }
         });
 
         displayUsers();
 
 
-//        doctorImage.setOnClickListener(this);
 
         return view;
     }
@@ -113,27 +108,5 @@ public class ChatFragment extends Fragment {
             }
         });
     }
-//
-//    @Override
-//    public void onClick(View view)
-//    {
-//        Fragment fragment = null;
-//        switch (view.getId())
-//        {
-//            case R.id.doctor_image_chat:
-//                fragment = new DoctorListFragment();
-//                replaceFragment(fragment);
-//                break;
-//            default:
-//                break;
-//        }
-//    }
-//
-//    public void replaceFragment(Fragment someFragment)
-//    {
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        transaction.replace(R.id.fragment, someFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
+
 }
