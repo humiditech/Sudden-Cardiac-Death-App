@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.scdapp.ChatActivity;
 import com.example.scdapp.Models.UsersModel;
 import com.example.scdapp.R;
@@ -47,6 +48,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
         friendId = user.getUid();
         holder.nickname.setText(user.getnName());
 
+        if(user.getImageURL().equals("default"))
+        {
+            holder.imageView.setImageResource(R.drawable.ic_baseline_person_24);
+        }
+        else
+        {
+            Glide.with(context).load(user.getImageURL()).into(holder.imageView);
+        }
+
     }
 
     @Override
@@ -73,7 +83,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.MyHolder> {
             friendId = user.getUid();
             Intent intent = new Intent(context, ChatActivity.class);
             intent.putExtra("friendId",friendId);
-            Toast.makeText(context, friendId, Toast.LENGTH_SHORT).show();
             context.startActivity(intent);
         }
     }

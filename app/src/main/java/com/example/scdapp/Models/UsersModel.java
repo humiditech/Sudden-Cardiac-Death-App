@@ -2,9 +2,9 @@ package com.example.scdapp.Models;
 
 
 public class UsersModel {
-    String addr, age, dName, emailAddr, fName, nName, uid;
+    String addr, age, dName, emailAddr, fName, nName, uid,imageURL;
 
-    public UsersModel(String addr, String age, String dName, String emailAddr, String fName, String nName, String uid) {
+    public UsersModel(String addr, String age, String dName, String emailAddr, String fName, String nName, String uid, String imageURL) {
         this.addr = addr;
         this.age = age;
         this.dName = dName;
@@ -12,6 +12,7 @@ public class UsersModel {
         this.fName = fName;
         this.nName = nName;
         this.uid = uid;
+        this.imageURL = imageURL;
     }
 
     public UsersModel() {
@@ -71,5 +72,11 @@ public class UsersModel {
 
     public void setUid(String uid){
         this.uid = uid;
+    }
+
+    public String getImageURL(){return imageURL;}
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

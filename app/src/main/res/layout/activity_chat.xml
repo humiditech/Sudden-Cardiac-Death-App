@@ -38,6 +38,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chat_card"
@@ -67,6 +68,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/ic_add_button"
                 android:layout_margin="5dp"
+                android:enabled="false"
                 />
 
             <EditText
@@ -86,6 +88,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/ic_send_button"
                 android:layout_margin="5dp"
+                android:enabled="false"
                 />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
