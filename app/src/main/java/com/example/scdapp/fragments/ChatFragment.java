@@ -2,9 +2,12 @@ package com.example.scdapp.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,26 +16,38 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.scdapp.Adapters.UserAdapter;
+import com.example.scdapp.Models.UsersModel;
 import com.example.scdapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Text;
 
-public class ChatFragment extends Fragment implements View.OnClickListener{
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatFragment extends Fragment {
 
 
     public ChatFragment() {
         // Required empty public constructor
     }
 
-    private TextView patientNickName,doctorName;
-    private ImageView doctorImage;
+    private TextView patientNickName;
+//    private ImageView doctorImage;
+    private RecyclerView recyclerView;
+    private List<UsersModel> usersList;
+    private UserAdapter uAdapter;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String userId;
@@ -44,46 +59,81 @@ public class ChatFragment extends Fragment implements View.OnClickListener{
         if (container == null) return null;
         RelativeLayout view = (RelativeLayout) inflater.inflate(R.layout.fragment_chat,container,false);
         patientNickName = (TextView) view.findViewById(R.id.patient_chat_name);
-        doctorName = (TextView) view.findViewById(R.id.doctor_chat_name);
-        doctorImage = (ImageView) view.findViewById(R.id.doctor_image_chat);
+//        doctorName = (TextView) view.findViewById(R.id.doctor_chat_name);
+//        doctorImage = (ImageView) view.findViewById(R.id.doctor_image_chat);
+        recyclerView = view.findViewById(R.id.recyclerview_users);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         fAuth = FirebaseAuth.getInstance();
         fStore = FirebaseFirestore.getInstance();
         userId = fAuth.getCurrentUser().getUid();
+
 
         DocumentReference documentReference = fStore.collection("users").document(userId);
         documentReference.addSnapshotListener(getActivity(), new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 patientNickName.setText(value.getString("nName"));
-                doctorName.setText(value.getString("dName"));
+//                doctorName.setText(value.getString("dName"));
             }
         });
 
-        doctorImage.setOnClickListener(this);
+        displayUsers();
+
+
+//        doctorImage.setOnClickListener(this);
 
         return view;
     }
 
-    @Override
-    public void onClick(View view)
-    {
-        Fragment fragment = null;
-        switch (view.getId())
-        {
-            case R.id.doctor_image_chat:
-                fragment = new DoctorListFragment();
-                replaceFragment(fragment);
-                break;
-            default:
-                break;
-        }
-    }
+    private void displayUsers() {
+        usersList = new ArrayList<>();
 
-    public void replaceFragment(Fragment someFragment)
-    {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment, someFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        CollectionReference reference = fStore.collection("users");
+
+        reference.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                usersList.clear();
+
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        if (document.exists()) {
+                            UsersModel user = document.toObject(UsersModel.class);
+
+                            if (!user.getUid().equals(userId)) {
+                                usersList.add(user);
+                            }
+
+                            uAdapter = new UserAdapter(getContext(), usersList);
+                            recyclerView.setAdapter(uAdapter);
+                        }
+                    }
+                }
+            }
+        });
     }
+//
+//    @Override
+//    public void onClick(View view)
+//    {
+//        Fragment fragment = null;
+//        switch (view.getId())
+//        {
+//            case R.id.doctor_image_chat:
+//                fragment = new DoctorListFragment();
+//                replaceFragment(fragment);
+//                break;
+//            default:
+//                break;
+//        }
+//    }
+//
+//    public void replaceFragment(Fragment someFragment)
+//    {
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        transaction.replace(R.id.fragment, someFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 }
