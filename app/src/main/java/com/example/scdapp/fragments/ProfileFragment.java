@@ -1,10 +1,13 @@
 package com.example.scdapp.fragments;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -31,6 +35,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import org.w3c.dom.Text;
 
@@ -45,6 +54,7 @@ public class ProfileFragment extends Fragment {
     private TextView patientFullName,patientNickName,patientAddress,patientAge,patientDoctorName;
     private Button showQrButton,logoutButton;
     private Dialog qrDialog;
+    private ImageView qrOutput;
     private FirebaseAuth fAuth;
     private FirebaseFirestore fStore;
     private String userId;
@@ -80,12 +90,23 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+
         showQrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                qrDialog.show();
-                qrDialog.setContentView(R.layout.popup_qr);
-                qrDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                String data = patientFullName.getText().toString() + "," + patientAge.getText().toString() + "," + "patient" + "," + patientAddress.getText().toString() + "," + patientDoctorName.getText().toString();
+                MultiFormatWriter writer = new MultiFormatWriter();
+                try{
+                    BitMatrix matrix = writer.encode(data, BarcodeFormat.QR_CODE,200,200);
+                    BarcodeEncoder encoder = new BarcodeEncoder();
+                    Bitmap bitmap = encoder.createBitmap(matrix);
+                    loadPhoto(bitmap,600,600);
+
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 
@@ -98,6 +119,24 @@ public class ProfileFragment extends Fragment {
             }
         });
         return view;
+    }
+
+
+    private void loadPhoto(Bitmap bitmap, int width, int height)
+    {
+        Bitmap tempImageView = bitmap;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog imageDialog = builder.create();
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.popup_qr,(ViewGroup) getActivity().findViewById(R.id.qr_container));
+        ImageView image = (ImageView) layout.findViewById(R.id.qr_output);
+        image.setImageBitmap(tempImageView);
+        imageDialog.setView(layout);
+
+        imageDialog.show();
+        imageDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        imageDialog.getWindow().setLayout(width,height);
     }
 
 }
